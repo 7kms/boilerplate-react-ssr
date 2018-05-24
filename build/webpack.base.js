@@ -6,7 +6,7 @@ const isProduct = process.env.NODE_ENV === 'production'
 const resolve = path.resolve
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 // const styleConfig = require('./styleConfig')
-
+// https://webpack.js.org/configuration/
 const config = {
     resolve:{
         extensions: [".js", ".json", ".jsx", ".ts"],
@@ -26,14 +26,9 @@ const config = {
         rules: [
             {
                 test: /\.jsx?$/,
-                include: [path.resolve(__dirname,'../src')],
+                include: pathConfig.appSrc,
                 enforce: 'pre',
                 loader: require.resolve('eslint-loader')
-            },
-            {
-                test: /\.jsx?$/,
-                loader: require.resolve('babel-loader'),
-                exclude: [/node_modules/]
             },
             {
                 // "oneOf" will traverse all following loaders until one will
@@ -50,6 +45,10 @@ const config = {
                       name: 'static/img/[name].[hash:6].[ext]',
                     },
                   },
+                  // {
+                  //   test: /\.json$/,
+                  //   loader: require.resolve('json-loader')
+                  // },
                   {
                     test: [/manifest.json$/],
                     loader: require.resolve('file-loader'),
@@ -96,7 +95,7 @@ const config = {
                     // it's runtime that would otherwise processed through "file" loader.
                     // Also exclude `html` and `json` extensions so they get processed
                     // by webpacks internal loaders.
-                    exclude: [/\.jsx?$/,/\.(css|less)$/, /\.html$/],
+                    exclude: [/\.jsx?$/,/\.json$/,/\.(css|less)$/, /\.html$/],
                     options: {
                       name: 'static/media/[name].[hash:6].[ext]',
                     },
@@ -115,10 +114,7 @@ const config = {
         chunkFilename: "static/[id].css"
       })
     ],
-    // stats: {
-    //   // 添加资源信息
-    //   assets: true,
-    // }
+    stats: "errors-only"
 }
 
 module.exports = config

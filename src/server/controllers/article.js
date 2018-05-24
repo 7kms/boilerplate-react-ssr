@@ -11,7 +11,8 @@ export const articleList = (req,res)=>{
         createTime: '2018-06-01 08:00:32'
         }
     ]
-    res.send(responseData(200,list))
+    console.log(list)
+    res.json(responseData(200,list))
 }
 
 

@@ -1,14 +1,15 @@
 import axios from 'axios';
-import { API_TIMEOUT} from '~config';
+import { API_TIMEOUT, SERVERURL} from '~config';
 let generateUrl = (url) => {
     return url 
 }
 
 let headerConfig = ()=>{
     let obj = {
-        headers : {}
+        headers : {
+            'Content-Type': 'application/json'
+        }
     };
-    obj.headers['Content-Type'] = 'application/json';
     return obj
 }
 
@@ -35,7 +36,7 @@ const generateRequestObj = (method,url,paramsObj,cancelToken,noToken)=>{
     let obj = {
         method: method,
         url: generateUrl(url),
-        baseURL: '/api',
+        baseURL: SERVERURL,
         cancelToken
     };
     if(method === 'get'){
@@ -48,7 +49,7 @@ const generateRequestObj = (method,url,paramsObj,cancelToken,noToken)=>{
 
 export const $get = (url, paramsObj={}, cancelToken)=>{
    let configObj = generateRequestObj('get',url,paramsObj,cancelToken);
-   return axios(configObj).then(res=>{
+    return axios(configObj).then(res=>{
         return Promise.resolve(res.data)
     },errorProcess)
 }
@@ -79,7 +80,7 @@ export const $postwithformdata= (url, paramsObj={})=>{
         method: 'post',
         headers:{'Content-Type':'application/x-www-form-urlencoded'},
         url: generateUrl(url),
-        baseURL: '/api',
+        baseURL: SERVERURL,
         data: arr.join('&')
     })).then(res=>{
         return Promise.resolve(res.data)

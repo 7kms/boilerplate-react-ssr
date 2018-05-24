@@ -12,10 +12,10 @@ const serverInfo = `express/${require('express/package.json').version}`
 const app = express()
 
 const createRenderer = ({default: serverRender}, {template}) => {
-    return (url)=>{
-       const result =  serverRender(url)
+    return async (url)=>{
+       const result =  await serverRender(url)
        if(result.status == 200){
-         result.html = template.replace('<div id="root"></div>',`<div id="root">${result.html}</div>`)
+         result.html = template.replace('<div id="root"></div>',`<div id="root">${result.html}</div><script>window.__PRELOADED_STATE__ = ${JSON.stringify(result.finalState).replace(/</g, '\\u003c')}</script>`)
        }
        return result
     }
@@ -56,14 +56,15 @@ app.use(pathConfig.staticPublicPath,serve(pathConfig.clientOutput))
 // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
 // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
 
-const render = (req, res) => {
+const render = async (req, res) => {
+  logger.info('start rendering')
   const s = Date.now()
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
   if(!renderer){
     res.send('Page is initializing, please refresh leater')
   }
-  const result = renderer(req.originalUrl)
+  const result = await renderer(req.originalUrl)
   if(result.status == 200){
     res.send(result.html)
   }else if(result.status == 301){
@@ -72,18 +73,20 @@ const render = (req, res) => {
     res.status(500).send('500 | Internal Server Error')
   }
   if (!isProd) {
-    console.log(`whole request: ${Date.now() - s}ms`)
+    logger.info(`whole request: ${Date.now() - s}ms`)
   }
 }
 
 app.use('/api',router)
 
 app.get('*', isProd ? render : (req, res) => {
-  console.log('request is coming')
+  logger.info('request is coming')
+  logger.info(readyPromise)
+  // res.send('request is coming')
   readyPromise.then(() => render(req, res))
 })
 
 const port = process.env.PORT || 8080
 app.listen(port, () => {
-  console.log(`server started at http://127.0.0.1:${port}`)
+  logger.info(`server started at http://127.0.0.1:${port}`)
 })

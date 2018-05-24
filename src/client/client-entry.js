@@ -1,17 +1,26 @@
+import '~less/base.less'
+import '~utils/logger'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { hydrate,render } from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { renderRoutes } from 'react-router-config'
-import '~less/base.less'
 import routes from './pages/routes'
+import { Provider } from 'react-redux'
+import configureStore from './redux/store'
 
+// Grab the state from a global variable injected into the server-generated HTML
+const preloadedState = window.__PRELOADED_STATE__
+// Allow the passed state to be garbage-collected
+delete window.__PRELOADED_STATE__
+
+const store = configureStore(preloadedState)
 
 const App = ({routes})=>{
     return (
-        <BrowserRouter>
-            {renderRoutes(routes)}
-        </BrowserRouter>
+        <Provider store={store}>
+            <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
+        </Provider>
     )
 }
 App.propTypes = {routes: PropTypes.array.isRequired}

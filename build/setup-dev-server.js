@@ -23,6 +23,7 @@ module.exports = function setupDevServer (app, templatePath, cb) {
   let bundle,template,ready,clientBuildDone;
   const readyPromise = new Promise(r => { ready = r })
   const update = () => {
+    console.log('update ....',  bundle,  clientBuildDone)
     if (bundle && clientBuildDone) {
       template = readFile(devMiddleware.fileSystem,`${clientConfig.output.path}/index.html`)
       ready()
@@ -54,9 +55,10 @@ module.exports = function setupDevServer (app, templatePath, cb) {
   clientCompiler.plugin('done', stats => {
     clientBuildDone = true
     stats = stats.toJson()
-    stats.errors.forEach(err => console.error(err))
-    stats.warnings.forEach(err => console.warn(err))
+    // stats.errors.forEach(err => console.error(err))
+    // stats.warnings.forEach(err => console.warn(err))
     if (stats.errors.length) return
+    console.log('clientCompiler done')
     update()
   })
 
@@ -67,6 +69,14 @@ module.exports = function setupDevServer (app, templatePath, cb) {
   const serverCompiler = webpack(serverConfig)
   const mfs = new MFS()
   serverCompiler.outputFileSystem = mfs
+  serverCompiler.plugin('done', stats => {
+    stats = stats.toJson()
+    stats.errors.forEach(err => console.error(err))
+    stats.warnings.forEach(err => console.warn(err))
+    if (stats.errors.length) return
+    logger.info('serverCompiler done')
+    update()
+  })
   serverCompiler.watch({}, (err, stats) => {
     if (err) throw err
     stats = stats.toJson()

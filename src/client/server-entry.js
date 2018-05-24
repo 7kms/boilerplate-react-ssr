@@ -1,16 +1,36 @@
+import '~less/base.less'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
-import { renderRoutes } from 'react-router-config'
+import { renderRoutes, matchRoutes } from 'react-router-config'
 import routes from './pages/routes'
-import '~less/base.less'
+import { Provider } from 'react-redux'
+import configureStore from './redux/store'
 
-export default (url) => {
+// https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
+const loadBranchData = (store,pathname) => {
+    const branch = matchRoutes(routes, pathname)
+    // console.log(branch)
+    const promises = branch.map(({ route, match }) => {
+        const {loadInitialData} = route.component
+      return loadInitialData
+        ? loadInitialData(store,match)
+        : Promise.resolve(null)
+    })
+    return Promise.all(promises)
+}
+
+//https://redux.js.org/recipes/server-rendering
+export default async (url) => {
+    const store = configureStore({})
     const context = {}
+    await loadBranchData(store,url)
     const html = ReactDOMServer.renderToString(
-        <StaticRouter location={url} context={context}>
-            {renderRoutes(routes)}
-        </StaticRouter>
+        <Provider store={store}>
+            <StaticRouter location={url} context={context}>
+                {renderRoutes(routes)}
+            </StaticRouter>
+        </Provider>
     )
     if(context.url){
         return {
@@ -18,9 +38,11 @@ export default (url) => {
             context
         }
     }else{
+        const finalState = store.getState()
         return {
             status: 200,
-            html
+            html,
+            finalState
         }
     }
 }

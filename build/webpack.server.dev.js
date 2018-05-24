@@ -24,7 +24,7 @@ module.exports = merge({
   }, 
   module:{
     rules:[
-      ...styleConfig(true),
+      ...styleConfig(true)
     ]
   },
   plugins: [
