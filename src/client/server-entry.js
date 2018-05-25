@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import { renderRoutes, matchRoutes } from 'react-router-config'
+import Helmet from 'react-helmet'
 import routes from './pages/routes'
 import { Provider } from 'react-redux'
 import configureStore from './redux/store'
@@ -32,6 +33,7 @@ export default async (url) => {
             </StaticRouter>
         </Provider>
     )
+    const helmet = Helmet.renderStatic();
     if(context.url){
         return {
             status: 301,
@@ -42,6 +44,7 @@ export default async (url) => {
         return {
             status: 200,
             html,
+            helmet,
             finalState
         }
     }

@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import express from 'express'
 import router from '../src/server/router'
+import generateTemplate from './template'
 
 const resolve = file => path.resolve(__dirname, file)
 
@@ -13,11 +14,11 @@ const app = express()
 
 const createRenderer = ({default: serverRender}, {template}) => {
     return async (url)=>{
-       const result =  await serverRender(url)
-       if(result.status == 200){
-         result.html = template.replace('<div id="root"></div>',`<div id="root">${result.html}</div><script>window.__PRELOADED_STATE__ = ${JSON.stringify(result.finalState).replace(/</g, '\\u003c')}</script>`)
+       const pageInfo =  await serverRender(url)
+       if(pageInfo.status == 200){
+         pageInfo.html = generateTemplate(template,pageInfo)
        }
-       return result
+       return pageInfo
     }
 }
 

@@ -1,6 +1,7 @@
 import React,{ Component } from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
+import KM7Page from '~components/KM7Page'
 import {fetchList} from '~actions/article'
 
 
@@ -16,6 +17,25 @@ class Home extends Component{
     static propTypes = {
         list: PropTypes.array.isRequired,
         dispatch: PropTypes.func.isRequired
+    }
+    header = {
+        title: 'ssr title',
+        metas: [{
+            name: 'twitter:card',
+            content: 'summary_large_image'
+        },
+        {
+            name: 'twitter:site',
+            content: '@newsdogapp'
+        },
+        {
+            property: 'fb:app_id',
+            content: '508207026019625'
+        }],
+        links: [{
+            rel: 'image_src',
+            href: 'ahdoadaj'
+        }]
     }
     state = {
         params: {
@@ -35,11 +55,11 @@ class Home extends Component{
     }
     render(){
         const {list} = this.props;
-        return (<div>
+        return (<KM7Page header={this.header}>
             {list.map((item,index)=>{
                 return <div key={index}>{item.title}</div>
             })}
-        </div>)
+        </KM7Page>)
     }
 }
 

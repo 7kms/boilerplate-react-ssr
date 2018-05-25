@@ -6,5 +6,4 @@ export default (() =>{
             global.console = logger
         }
     }
-    console.log(11111111)
 })()

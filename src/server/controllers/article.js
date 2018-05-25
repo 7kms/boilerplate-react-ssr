@@ -9,6 +9,10 @@ export const articleList = (req,res)=>{
         {
         title: 'tes1',
         createTime: '2018-06-01 08:00:32'
+        },
+        {
+        title: 'tes2',
+        createTime: '2018-06-01 08:00:32'
         }
     ]
     console.log(list)

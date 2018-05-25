@@ -39,7 +39,7 @@ module.exports = merge({
     new CleanWebpackPlugin([pathConfig.clientOutput],{root: path.resolve()}),
     //https://github.com/jantimon/html-webpack-plugin#configuration
     new HtmlWebpackPlugin({
-      title: 'react blog',
+      title: '7km',
       template: pathConfig.htmlTemplate
     }) 
   ],
