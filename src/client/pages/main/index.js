@@ -15,6 +15,8 @@ const mapStateToProps = ({articleInfo:{list}})=>{
 @connect(mapStateToProps)
 class Home extends Component{
     static propTypes = {
+        route: PropTypes.object.isRequired,
+        match: PropTypes.object.isRequired,
         list: PropTypes.array.isRequired,
         dispatch: PropTypes.func.isRequired
     }
@@ -43,15 +45,29 @@ class Home extends Component{
             size: 20
         }
     }
-    static loadInitialData = (store)=>{
-        // const {params} = this.state;
-        return store.dispatch(fetchList({
+    static loadInitialData = (store,match)=>{
+        const {category} = match.params;
+        return store.dispatch(fetchList(category,{
             page: 0,
             size: 20
         }))
     }
+    getList = (params)=>{
+        const {dispatch,match:{params:{category}}} = this.props;
+        params = params || this.state.params;
+        dispatch(fetchList(category,params))
+    }
     componentDidMount(){
-        console.log('home componentDidMount')
+        const {list} = this.props;
+        if(!list.length){
+            this.getList()
+        }
+    }
+    componentDidUpdate(){
+        const {list} = this.props;
+        if(!list.length){
+            this.getList()
+        }
     }
     render(){
         const {list} = this.props;

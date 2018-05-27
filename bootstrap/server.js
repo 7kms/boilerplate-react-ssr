@@ -14,11 +14,19 @@ const app = express()
 
 const createRenderer = ({default: serverRender}, {template}) => {
     return async (url)=>{
-       const pageInfo =  await serverRender(url)
-       if(pageInfo.status == 200){
-         pageInfo.html = generateTemplate(template,pageInfo)
-       }
-       return pageInfo
+      try{
+        const pageInfo =  await serverRender(url)
+        if(pageInfo.status == 200){
+          pageInfo.html = generateTemplate(template,pageInfo)
+        }
+        return pageInfo
+      }catch(e){
+        return {
+          status:500,
+          error:e
+        }
+      }
+      
     }
 }
 
@@ -71,22 +79,25 @@ const render = async (req, res) => {
   }else if(result.status == 301){
     res.redirect(result.context.url)
   }else{
-    res.status(500).send('500 | Internal Server Error')
+    logger.error(result.error.stack);
+    res.status(500).send(result)
   }
   if (!isProd) {
-    logger.info(`whole request: ${Date.now() - s}ms`)
+    logger.info(`whole request: >>: %s %d ms`,req.url,Date.now() - s)
   }
 }
 
 app.use('/api',router)
 
 app.get('*', isProd ? render : (req, res) => {
-  logger.info('request is coming')
-  logger.info(readyPromise)
+  logger.info('request is coming << %s',req.url)
   // res.send('request is coming')
   readyPromise.then(() => render(req, res))
 })
-
+app.use(function(err, req, res) {
+  logger.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 const port = process.env.PORT || 8080
 app.listen(port, () => {
   logger.info(`server started at http://127.0.0.1:${port}`)

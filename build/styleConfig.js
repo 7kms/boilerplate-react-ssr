@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const cssLoaderRule = {
     loader: require.resolve('css-loader'),
     options: {
-      modules: false,
+      modules: true,
       importLoader: true,
       localIdentName: '[local]-[hash:base64:6]'
     }
@@ -79,71 +79,3 @@ module.exports = (isServerSide) => {
         return generateRuleModule(item,isServerSide)
     })
 }
-
-/**
- 
-{
-    test: /\.css$/,
-    use: [
-        require.resolve('style-loader'),
-        {
-            loader: require.resolve('css-loader'),
-            options: {
-            modules: false,
-            importLoader: true,
-            localIdentName: '[local]-[hash:base64:6]'
-            }
-        },
-        {
-            loader: require.resolve('postcss-loader'),
-            options: {
-            ident: 'postcss',
-            plugins: () => [
-                require('autoprefixer')({
-                browsers: [
-                    '>10%',
-                    'last 99 versions',
-                    'Firefox ESR',
-                    'not ie < 9', // React doesn't support IE8 anyway
-                ]
-                })
-            ]
-            }
-        }
-        ]
-    },
-    {
-    test: /\.less$/,
-    include: pathConfig.appSrc,
-    use:[
-        require.resolve('style-loader'),
-        {
-            loader: require.resolve('css-loader'),
-            options: {
-            modules: false,
-            importLoader: true,
-            localIdentName: '[local]-[hash:base64:6]'
-            }
-        },
-        {
-            loader: require.resolve('postcss-loader'),
-            options: {
-            ident: 'postcss',
-            plugins: () => [
-                require('autoprefixer')({
-                browsers: [
-                    '>10%',
-                    'last 99 versions',
-                    'Firefox ESR',
-                    'not ie < 9', // React doesn't support IE8 anyway
-                ]
-                })
-            ]
-            }
-        },
-        require.resolve('less-loader')
-    ]
-}
-
-
-*/

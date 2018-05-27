@@ -1,5 +1,6 @@
 import '~less/base.less'
 import '~utils/logger'
+import 'babel-polyfill'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { hydrate,render } from 'react-dom'
@@ -19,7 +20,9 @@ const store = configureStore(preloadedState)
 const App = ({routes})=>{
     return (
         <Provider store={store}>
-            <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
+            <BrowserRouter>
+                {renderRoutes(routes)}
+            </BrowserRouter>
         </Provider>
     )
 }

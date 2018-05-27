@@ -1,18 +1,24 @@
 import App from './app'
-import Home from './home/index'
+import Main from './main/index'
 import Article from './article/index'
+import About from './about/index'
 
-const routes = [    
+const routes = [
     {
         component: App,
+        path: '/:category?',
         routes: [
             { 
-                path: '/',
+                path: '/about',
+                component: About
+            },
+            { 
+                path: '/:category?',
                 exact: true,
-                component: Home,
+                component: Main
             },
             {
-                path: '/article/:id',
+                path: '/:category/:id',
                 exact: true,
                 component: Article
             }

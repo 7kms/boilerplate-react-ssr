@@ -4,8 +4,8 @@ import ReactDOMServer from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import { renderRoutes, matchRoutes } from 'react-router-config'
 import Helmet from 'react-helmet'
-import routes from './pages/routes'
 import { Provider } from 'react-redux'
+import routes from './pages/routes'
 import configureStore from './redux/store'
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
