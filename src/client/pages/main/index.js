@@ -57,6 +57,11 @@ class Home extends Component{
         params = params || this.state.params;
         dispatch(fetchList(category,params))
     }
+    loadMore = ()=>{
+        const {params} = this.state;
+        params.page++
+        this.getList(params)
+    }
     componentDidMount(){
         const {list} = this.props;
         if(!list.length){

@@ -5,7 +5,7 @@ const resolve = (url)=>{
 }
 module.exports = {
     appSrc: resolve('../src'),
-    staticPublicPath: '/static_7km',
+    staticPublicPath: '/static',
     clientOutput: resolve('../__build__client__output__'),
     clientEntry: resolve('../src/client/client-entry.js'),
     serverOutput: resolve('../__build__server__output__'),

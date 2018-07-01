@@ -73,6 +73,18 @@ const config = {
                       cacheDirectory: true,
                     },
                   },
+                  {
+                    test: /\.tsx?$/,
+                    use:[
+                      {
+                        loader: require.resolve('babel-loader')
+                      },
+                      {
+                        loader: require.resolve('ts-loader')
+                      }
+                    ],
+                    include: pathConfig.appSrc
+                  },
                   // The notation here is somewhat confusing.
                   // "postcss" loader applies autoprefixer to our CSS.
                   // "css" loader resolves paths in CSS and adds assets as dependencies.
