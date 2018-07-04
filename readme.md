@@ -1,2 +1,15 @@
-# React blog by ssr
-> This is a personal ssr project prepare for work. If these code is powerful , I will use it in production at my company project.
+# react-ssr-boilerplate
+
+# usage
+
+This is a project template for [ndog-cli](https://github.com/tangl2014/ndog-cli.git)
+
+```bash
+$ npm install -g ndog-cli
+
+$ ndog react-ssr myproject
+
+$ cd myporject
+
+$ npm install
+```
