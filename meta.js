@@ -15,5 +15,5 @@ module.exports = {
       return templateVersion
     },
   },
-  skipInterpolation:['src/**/*']
+  skipInterpolation:['src/**/*','bootstrap/**/*','utils/**/*']
 }
